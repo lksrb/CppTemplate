@@ -14,8 +14,7 @@ workspace "CppProject"
 
 	configurations {
 	    "Debug",
-        "Release",
-		"Dist"
+        "Release"
     }
 
 	solution_items {
@@ -33,7 +32,6 @@ workspace "CppProject"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}";
 
 -- Project
-
 project "CppProject"
 	language "C++"
 	cppdialect "C++20"
@@ -50,8 +48,7 @@ project "CppProject"
 	}
 
 	includedirs {
-		"Source",
-		"%{IncludeDir.VulkanSDK}"
+		"Source"
 	}
 
 	defines {
@@ -62,6 +59,7 @@ project "CppProject"
 	filter "system:windows"
 		systemversion "latest"
 		defines { "GND_PLATFORM_WIN32" }
+		links { }
 
 		-- Exclude all .cpp files from build by default
 	filter "files:Source/**.cpp"
@@ -83,25 +81,11 @@ project "CppProject"
 		defines { "CPP_DEBUG", "ENABLE_VALIDATION_LAYERS=1" }
 		runtime "Debug"
 		symbols "on"
-		links { "%{Library.Vulkan}" }
 
 	filter "configurations:Release"
 		kind "ConsoleApp"
-		defines { "CPP_RELEASE", "ENABLE_VALIDATION_LAYERS=1" }
+		defines { "CPP_RELEASE", "ENABLE_VALIDATION_LAYERS=0" }
 		runtime "Release"
 		optimize "Speed"
 		symbols "on"
 		flags { "LinkTimeOptimization" }
-
-	filter "configurations:Dist"
-		toolset "clang"
-		kind "WindowedApp"
-		defines { "CPP_DIST", "ENABLE_VALIDATION_LAYERS=0" }
-		runtime "Release"
-		optimize "Speed"
-		symbols "off"
-		flags { "NoBufferSecurityCheck", "NoManifest", "NoImplicitLink", "LinkTimeOptimization" }
-		exceptionhandling "off"
-		rtti "off"
-		buildoptions { "/Gs9999999" }
-		linkoptions { "/NODEFAULTLIB", "/STACK:0x100000,0x100000" }
